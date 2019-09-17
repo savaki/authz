@@ -52,6 +52,11 @@ func TestAuthorizer_Defaults(t *testing.T) {
 		assert.True(t, ok)
 		assert.Equal(t, []string{"first_name", "user", "write_only"}, fields)
 	})
+
+	t.Run("not authorized", func(t *testing.T) {
+		_, ok := authorizer.WriteAccess(ctx, "abc", "blah")
+		assert.False(t, ok)
+	})
 }
 
 func BenchmarkAuthorizer(t *testing.B) {
