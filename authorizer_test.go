@@ -36,3 +36,20 @@ func TestAuthorizer_ReadAccess(t *testing.T) {
 		assert.Equal(t, []string{"first_name", "user", "write_only"}, fields)
 	})
 }
+
+func TestAuthorizer_Defaults(t *testing.T) {
+	ctx := context.Background()
+	authorizer := New("example.com")
+
+	t.Run("read", func(t *testing.T) {
+		fields, ok := authorizer.ReadAccess(ctx, "abc", "agents")
+		assert.True(t, ok)
+		assert.Equal(t, []string{"first_name", "read_only", "user"}, fields)
+	})
+
+	t.Run("write", func(t *testing.T) {
+		fields, ok := authorizer.WriteAccess(ctx, "abc", "agents")
+		assert.True(t, ok)
+		assert.Equal(t, []string{"first_name", "user", "write_only"}, fields)
+	})
+}

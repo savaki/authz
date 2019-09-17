@@ -149,9 +149,9 @@ func pollOnce(ctx context.Context, site string, config config) (query, error) {
 		module string
 	)
 
-	group, ctx := errgroup.WithContext(ctx)
+	group, child := errgroup.WithContext(ctx)
 	group.Go(func() error {
-		v, err := config.data(ctx, site)
+		v, err := config.data(child, site)
 		if err != nil {
 			return err
 		}
@@ -159,7 +159,7 @@ func pollOnce(ctx context.Context, site string, config config) (query, error) {
 		return nil
 	})
 	group.Go(func() error {
-		v, err := config.module(ctx, site)
+		v, err := config.module(child, site)
 		if err != nil {
 			return err
 		}
@@ -176,7 +176,7 @@ func pollOnce(ctx context.Context, site string, config config) (query, error) {
 		rego.Module("auth", module),
 		rego.Store(store),
 	)
-	partialRead, err := read.PartialEval(context.Background())
+	partialRead, err := read.PartialEval(ctx)
 	if err != nil {
 		return query{}, fmt.Errorf("partial eval failed for authorizer: %v", err)
 	}

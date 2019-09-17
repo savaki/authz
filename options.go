@@ -3,6 +3,7 @@ package authz
 import (
 	"context"
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"time"
 )
@@ -96,9 +97,31 @@ func WithStaticData(data map[string]interface{}) Option {
 }
 
 func defaultModule(ctx context.Context, site string) (string, error) {
-	return "", nil
+	resp, err := http.Get("https://raw.githubusercontent.com/savaki/authz/master/testdata/module.rego")
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	return string(data), nil
 }
 
 func defaultData(ctx context.Context, site string) (map[string]interface{}, error) {
-	return nil, nil
+	resp, err := http.Get("https://raw.githubusercontent.com/savaki/authz/master/testdata/data.json")
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	var data map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }
