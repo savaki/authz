@@ -53,3 +53,26 @@ func TestAuthorizer_Defaults(t *testing.T) {
 		assert.Equal(t, []string{"first_name", "user", "write_only"}, fields)
 	})
 }
+
+func BenchmarkAuthorizer(t *testing.B) {
+	content, err := ioutil.ReadFile("testdata/data.json")
+	assert.Nil(t, err)
+
+	var data map[string]interface{}
+	err = json.Unmarshal(content, &data)
+	assert.Nil(t, err)
+
+	content, err = ioutil.ReadFile("testdata/module.rego")
+	assert.Nil(t, err)
+	module := string(content)
+
+	ctx := context.Background()
+	authorizer := New("example.com", WithStaticData(data), WithStaticModule(module))
+
+	for i := 0; i < t.N; i++ {
+		_, ok := authorizer.ReadAccess(ctx, "abc", "agents")
+		if !ok {
+			t.Fatalf("got false; want true")
+		}
+	}
+}
