@@ -1,3 +1,5 @@
+[![GoDoc](https://godoc.org/github.com/savaki/authz?status.svg)](https://godoc.org/github.com/savaki/authz)
+
 auth
 -----------------------
 
