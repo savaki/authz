@@ -17,11 +17,11 @@ func main() {
     fields, ok := authorizer.ReadAccess(ctx, "abc", "agents")
     fmt.Println(fields, ok)
     // ok - true
-    // fields - list of fields with read access
+    // fields - first_name, read_only, user
     
     fields, ok = authorizer.WriteAccess(ctx, "abc", "agents")
     fmt.Println(fields, ok)
     // ok - true
-    // fields - list of fields with write access
+    // fields - first_name, write_only, user
 }
 ```
