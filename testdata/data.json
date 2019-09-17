@@ -1,0 +1,44 @@
+{
+  "role_mappings": {
+    "admin": {
+      "abc": true
+    },
+    "user": {
+      "abc": true
+    }
+  },
+  "permissions": {
+    "admin": {
+      "agents": {
+        "fields": [
+          {
+            "name": "first_name",
+            "read": true,
+            "write": true
+          },
+          {
+            "name": "read_only",
+            "read": true,
+            "write": false
+          },
+          {
+            "name": "write_only",
+            "read": false,
+            "write": true
+          }
+        ]
+      }
+    },
+    "user": {
+      "agents": {
+        "fields": [
+          {
+            "name": "user",
+            "read": true,
+            "write": true
+          }
+        ]
+      }
+    }
+  }
+}
